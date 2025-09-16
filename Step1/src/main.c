@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <gtk/gtk.h>
 #include "utils.h"
 #include "generator.h"
 #include "dfs.h"
@@ -13,24 +14,24 @@ int main() {
     int board[SIZE][SIZE];
 
     int choice;
-    printf("1: ½ºµµÄí Á÷Á¢ ÀÔ·Â\n2: ³­ÀÌµµº° ÀÚµ¿ »ı¼º\n¼±ÅÃ: ");
+    printf("1: ì‚¬ìš©ì ì…ë ¥\n2: ìŠ¤ë„ì¿  ëœë¤ ìƒì„±\n3: ì¢…ë£Œ");
     scanf("%d", &choice);
 
     if (choice == 1) {
-        printf("½ºµµÄí¸¦ ÀÔ·ÂÇÏ¼¼¿ä (0Àº ºóÄ­):\n");
+        printf("ìŠ¤ë„ì¿ ë¥¼ ì…ë ¥í•˜ì„¸ìš”:\n");
         for (int i = 0; i < SIZE; i++)
             for (int j = 0; j < SIZE; j++)
                 scanf("%d", &board[i][j]);
     } else if (choice == 2) {
-        printf("³­ÀÌµµ ¼±ÅÃ (1: ½¬¿ò, 2: º¸Åë, 3: ¾î·Á¿ò): ");
+        printf("ë‚œì´ë„ë¥¼ ì…ë ¥í•˜ì„¸ìš”: ");
         int level;
         scanf("%d", &level);
         generateRandomSudoku(board, level);
-        printf("\n¹®Á¦\n");
+        printf("\në¬¸ì œ\n");
         printBoardSimple(board);
     }
     else {
-        printf("Àß¸øµÈ ¼±ÅÃÀÔ´Ï´Ù.\n");
+        printf("ì¢…ë£Œí•©ë‹ˆë‹¤\n");
     }
 
     SudokuSolutions sols = { 0 };
@@ -47,19 +48,19 @@ int main() {
     solveSudokuHDFS(&sBoard, &sols);
     clock_t end = clock();
 
-    // ½Ã°£ ³Ñ ¹Ì¹ÌÇØ¼­ È½¼ö ºñÀ²·Î ½Ã°£ º¯°æÇÒ °Í
+    // ë‚˜ì¤‘ì— íšŸìˆ˜ë¡œ ë³€ê²½
     double elapsed_time = (double)(end - start) / CLOCKS_PER_SEC;
 
     if (sols.count == 0) {
-        printf("ÇØ´äÀÌ ¾ø½À´Ï´Ù.\n");
+        printf("í•´ë‹µì´ ì—†ìŠµë‹ˆë‹¤.\n");
     }
     else {
-        printf("Ã£Àº ÇØ´ä ¼ö: %d\n\n", sols.count);
+        printf("í•´ë‹µ ê°œìˆ˜: %d\n\n", sols.count);
         for (int k = 0; k < sols.count; k++) {
-            printf("ÇØ´ä %d:\n", k + 1);
+            printf("í•´ë‹µ:\n", k + 1);
             printBoard(board, sols.boards[k]);
         }
-        printf("Ç®ÀÌ ½Ã°£: %.3f ms\n", elapsed_time * 1000.00);
+        printf("ì‹¤í–‰ ì‹œê°„: %.3f ms\n", elapsed_time * 1000.00);
     }
 
     return 0;

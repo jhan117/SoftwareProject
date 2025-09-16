@@ -78,12 +78,10 @@ int removeCandidates(SudokuBoard* board, int row, int col, int num, CandidateCha
     int top = 0;
 
     for (int i = 0; i < SIZE; i++) {
-        // 같은 행
         if (board->cells[row][i].value == 0) {
             stack[top++] = (CandidateChange){ row, i, num, board->cells[row][i].candidates[n] };
             board->cells[row][i].candidates[n] = 0;
         }
-        // 같은 열
         if (board->cells[i][col].value == 0) {
             stack[top++] = (CandidateChange){ i, col, num, board->cells[i][col].candidates[n] };
             board->cells[i][col].candidates[n] = 0;

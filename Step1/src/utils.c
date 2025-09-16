@@ -14,7 +14,7 @@ void printBoard(int board[SIZE][SIZE], int solution[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             if (board[i][j] == 0) {
-                // »õ·Î Ã¤¿î ¼ýÀÚ´Â ³ë¶õ»ö
+                // ë…¸ëž€ìƒ‰
                 printf("\033[33m%d \033[0m", solution[i][j]);
             }
             else {

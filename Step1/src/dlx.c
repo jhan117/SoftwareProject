@@ -7,7 +7,7 @@ void initDLX(DLX* dlx) {
     dlx->col_count = MAX_COLS;
     dlx->columns = (Column*)malloc(sizeof(Column) * MAX_COLS);
     if (dlx->columns == NULL) {
-        fprintf(stderr, "∏ﬁ∏∏Æ «“¥Á Ω«∆–: dlx->columns\n");
+        fprintf(stderr, "Î©îÎ™®Î¶¨ Ìï†Îãπ Ïã§Ìå®: dlx->columns\n");
         exit(EXIT_FAILURE);
     }
 
@@ -18,7 +18,7 @@ void initDLX(DLX* dlx) {
         c->index = i;
         c->size = 0;
 
-        // æÓ¬∞º≠¿Œ¡ˆ prev∏¶ ∏’¿˙ «œ∏È πÆ¡¶ ª˝±Ë...
+        // Ïñ¥Ïß∏ÏÑúÏù∏ÏßÄ prevÎ•º Î®ºÏ†Ä Ïã§ÌñâÌïòÎ©¥ ÏïàÎê®
         c->next = &dlx->header;
         c->prev = dlx->header.prev;
         dlx->header.prev->next = c;
@@ -38,13 +38,13 @@ void addRow(DLX* dlx, int row_id, int* col_indices, int col_num) {
         Column* c = &dlx->columns[col_idx];
         Node* node = (Node*)malloc(sizeof(Node));
         if (node == NULL) {
-            fprintf(stderr, "∏ﬁ∏∏Æ «“¥Á Ω«∆–: node\n");
+            fprintf(stderr, "Î©îÎ™®Î¶¨ Ìï†Îãπ Ïã§Ìå®: node\n");
             exit(EXIT_FAILURE);
         }
         node->col = c;
         node->row_id = row_id;
 
-        // ºˆ¡˜ ø¨∞·
+        // ÏàòÏßÅ Ïó∞Í≤∞
         node->down = &c->head;
         node->up = c->head.up;
         c->head.up->down = node;
@@ -55,7 +55,7 @@ void addRow(DLX* dlx, int row_id, int* col_indices, int col_num) {
         rowNodes[i] = node;
     }
 
-    // ºˆ∆Ú ø¨∞·
+    // ÏàòÌèâ Ïó∞Í≤∞
     for (int i = 0; i < col_num; i++) {
         rowNodes[i]->left = rowNodes[(i + 3) % col_num];
         rowNodes[i]->right = rowNodes[(i + 1) % col_num];
@@ -68,20 +68,20 @@ void boardToDLX(DLX* dlx, int board[SIZE][SIZE]) {
             if (board[r][c] != 0) {
                 int num = board[r][c];
                 int cols[4] = {
-                    r * SIZE + c, // «— ºøø° 81∞≥
-                    SIZE * SIZE + r * SIZE + (num - 1), // «‡ø° 81∞≥
-                    (SIZE * SIZE * 2) + c * SIZE + (num - 1), // ø≠ø° 81∞≥
-                    (SIZE * SIZE * 3) + ((r / 3) * 3 + (c / 3)) * SIZE + (num - 1) // 3x3 π⁄Ω∫ø° 81∞≥
+                    r * SIZE + c,
+                    SIZE * SIZE + r * SIZE + (num - 1),
+                    (SIZE * SIZE * 2) + c * SIZE + (num - 1),
+                    (SIZE * SIZE * 3) + ((r / 3) * 3 + (c / 3)) * SIZE + (num - 1)
                 };
                 addRow(dlx, 100 * r + 10 * c + num, cols, 4);
             }
             else {
                 for (int num = 1; num <= SIZE; num++) {
                     int cols[4] = {
-                    r * SIZE + c, // «— ºøø° 81∞≥
-                    SIZE * SIZE + r * SIZE + (num - 1), // «‡ø° 81∞≥
-                    (SIZE * SIZE * 2) + c * SIZE + (num - 1), // ø≠ø° 81∞≥
-                    (SIZE * SIZE * 3) + ((r / 3) * 3 + (c / 3)) * SIZE + (num - 1) // 3x3 π⁄Ω∫ø° 81∞≥
+                    r * SIZE + c,
+                    SIZE * SIZE + r * SIZE + (num - 1),
+                    (SIZE * SIZE * 2) + c * SIZE + (num - 1),
+                    (SIZE * SIZE * 3) + ((r / 3) * 3 + (c / 3)) * SIZE + (num - 1)
                     };
                     addRow(dlx, 100 * r + 10 * c + num, cols, 4);
                 }

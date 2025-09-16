@@ -13,5 +13,5 @@ typedef struct {
 } SudokuBoard;
 
 typedef struct {
-    int row, col, num, prev; // prev는 이전 후보 값
+    int row, col, num, prev;
 } CandidateChange;

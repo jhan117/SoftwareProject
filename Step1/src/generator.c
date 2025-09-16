@@ -72,7 +72,7 @@ void rotateBoard(int board[SIZE][SIZE]) {
 }
 
 void mirrorBoard(int board[SIZE][SIZE]) {
-    int axis = rand() % 2; // 0: 수평, 1: 수직
+    int axis = rand() % 2;
     if (axis == 0) {
         for (int i = 0; i < SIZE / 2; i++)
             for (int j = 0; j < SIZE; j++) {

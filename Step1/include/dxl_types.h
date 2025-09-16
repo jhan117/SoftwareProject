@@ -15,7 +15,7 @@ struct Column {
     Node head;
     int size;
     Column* prev, * next;
-    int index; // ¿­ ¹øÈ£
+    int index; // ì—´ ë²ˆí˜¸
 };
 
 typedef struct {
