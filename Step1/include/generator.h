@@ -1,5 +1,5 @@
 #pragma once
 
-#define SIZE 9
+#include "common.h"
 
 void generateRandomSudoku(int board[SIZE][SIZE], int level);

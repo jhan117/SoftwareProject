@@ -1,0 +1,29 @@
+.sudoku-cell {
+  border: 1px solid gray;
+}
+
+.sudoku-cell-left {
+  border-left: 3px solid black;
+}
+
+.sudoku-cell-top {
+  border-top: 3px solid black;
+}
+
+.sudoku-cell-right {
+  border-right: 3px solid black;
+}
+
+.sudoku-cell-bottom {
+  border-bottom: 3px solid black;
+}
+
+.solution-cell {
+  color: red;
+  font-weight: bold;
+}
+
+.initial-cell {
+  color: black;
+  font-weight: normal;
+}
