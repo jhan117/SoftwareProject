@@ -14,6 +14,17 @@ const char *level_to_string(int level) {
   }
 }
 
+int string_to_level(const char *level) {
+  if (strcmp(level, "Easy") == 0)
+    return 0;
+  else if (strcmp(level, "Normal") == 0)
+    return 1;
+  else if (strcmp(level, "Hard") == 0)
+    return 2;
+  else if (strcmp(level, "N/A") == 0)
+    return -1;
+}
+
 void serialize_board_for_ui(int board[SIZE][SIZE], char out[SIZE * SIZE + 1]) {
   int k = 0;
   for (int i = 0; i < SIZE; i++) {

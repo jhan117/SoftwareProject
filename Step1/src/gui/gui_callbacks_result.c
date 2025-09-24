@@ -15,14 +15,16 @@ void on_result_selection_changed(GtkTreeSelection *selection,
   GtkTreeModel *model;
   if (!gtk_tree_selection_get_selected(selection, &model, &iter))
     return;
-  gchar *init_str = NULL, *sol_str = NULL;
+  gchar *init_str = NULL, *sol_str = NULL, *diff_str = NULL;
   gint num_sols = 0;
-  gtk_tree_model_get(model, &iter, 3, &num_sols, 6, &init_str, 7, &sol_str, -1);
+  gtk_tree_model_get(model, &iter, 2, &diff_str, 3, &num_sols, 6, &init_str, 7,
+                     &sol_str, -1);
 
   // 행 데이터 기반으로 보드판 만들기
   board_from_string(init_str, ctx->cur_board);
   ctx->sols = g_malloc0(sizeof(SudokuSolutions));
   ctx->sols->count = num_sols;
+  ctx->difficulty_level = string_to_level(diff_str);
   // 솔루션 보드 처리
   gchar **sols_split = g_strsplit(sol_str, "|", -1);
   for (int i = 0; i < ctx->sols->count; i++) {
