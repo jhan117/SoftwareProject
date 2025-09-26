@@ -53,18 +53,60 @@ void on_result_selection_changed(GtkTreeSelection *selection,
 }
 
 static void on_delete_row(GtkMenuItem *menuitem, gpointer user_data) {
-  GtkTreeView *tree_view = GTK_TREE_VIEW(user_data);
-  GtkTreeSelection *selection = gtk_tree_view_get_selection(tree_view);
-  GtkTreeModel *model = gtk_tree_view_get_model(tree_view);
+  AppContext *ctx = (AppContext *)user_data;
+
+  GtkTreeSelection *selection = gtk_tree_view_get_selection(ctx->result_table);
+  GtkTreeModel *model = gtk_tree_view_get_model(ctx->result_table);
   GtkTreeIter iter;
 
   if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
+    // 현재 path 저장
+    GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
+    int index = gtk_tree_path_get_indices(path)[0];
+
     gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
+
+    // 삭제 후 선택
+    GtkTreeIter new_iter;
+    GtkTreePath *new_path = NULL;
+
+    // 다음 행 있니?
+    if (gtk_tree_path_new_from_indices(index, -1)) {
+      new_path = gtk_tree_path_new_from_indices(index, -1);
+      if (!gtk_tree_model_get_iter(model, &new_iter, new_path)) {
+        gtk_tree_path_free(new_path);
+        new_path = NULL;
+      }
+    }
+
+    // 이전 행 있니?
+    if (!new_path && index > 0) {
+      new_path = gtk_tree_path_new_from_indices(index - 1, -1);
+      if (!gtk_tree_model_get_iter(model, &new_iter, new_path)) {
+        gtk_tree_path_free(new_path);
+        new_path = NULL;
+      }
+    }
+
+    if (new_path) {
+      gtk_tree_selection_select_iter(selection, &new_iter);
+      gtk_tree_path_free(new_path);
+    } else {
+      reset_context(ctx);
+      display_solution(ctx, NULL, 0);
+      GtkTextBuffer *buffer =
+          gtk_text_view_get_buffer(GTK_TEXT_VIEW(ctx->input_textview));
+      gtk_text_buffer_set_text(buffer, "", -1);
+    }
+
+    gtk_tree_path_free(path);
   }
 }
 
 gboolean on_treeview_right_click(GtkWidget *tree_view, GdkEventButton *event,
                                  gpointer user_data) {
+  AppContext *ctx = (AppContext *)user_data;
+
   if (event->type == GDK_BUTTON_PRESS &&
       event->button == GDK_BUTTON_SECONDARY) { // GDK_BUTTON_SECONDARY: 우클릭
     GtkTreePath *path = NULL;
@@ -81,8 +123,7 @@ gboolean on_treeview_right_click(GtkWidget *tree_view, GdkEventButton *event,
 
     GtkWidget *menu = gtk_menu_new();
     GtkWidget *delete_item = gtk_menu_item_new_with_label("Delete Row");
-    g_signal_connect(delete_item, "activate", G_CALLBACK(on_delete_row),
-                     tree_view);
+    g_signal_connect(delete_item, "activate", G_CALLBACK(on_delete_row), ctx);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), delete_item);
     gtk_widget_show_all(menu);
     gtk_menu_popup_at_pointer(GTK_MENU(menu), (GdkEvent *)event);
