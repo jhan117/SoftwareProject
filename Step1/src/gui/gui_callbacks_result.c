@@ -110,6 +110,7 @@ static void on_delete_row(GtkMenuItem *menuitem, gpointer user_data) {
       GtkTextBuffer *buffer =
           gtk_text_view_get_buffer(GTK_TEXT_VIEW(ctx->input_textview));
       gtk_text_buffer_set_text(buffer, "", -1);
+      ctx->result_store_count = 0;
     }
 
     gtk_tree_path_free(path);
