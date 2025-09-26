@@ -25,6 +25,8 @@ SRC := \
 	$(SRC_DIR)/gui/gui_callbacks_generate.c \
 	$(SRC_DIR)/gui/gui_callbacks_run.c \
 	$(SRC_DIR)/gui/gui_callbacks_result.c \
+	$(SRC_DIR)/gui/gui_callbacks_test.c \
+	$(SRC_DIR)/gui/gui_callbacks_save.c \
 	$(SRC_DIR)/gui/gui_dialog.c \
 	$(SRC_DIR)/utils/board_utils.c \
 	$(SRC_DIR)/utils/parsing.c \

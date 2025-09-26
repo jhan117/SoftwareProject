@@ -146,7 +146,6 @@ void generateRandomSudoku(int board[SIZE][SIZE], int level) {
     break;
   }
 
-  srand(time(NULL));
   int ops = min_ops + rand() % (max_ops - min_ops + 1);
 
   for (int i = 0; i < ops; i++) {

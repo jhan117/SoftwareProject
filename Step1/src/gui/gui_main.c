@@ -1,7 +1,10 @@
 #include "gui/gui.h"
+
 #include "gui/gui_callbacks_generate.h"
 #include "gui/gui_callbacks_result.h"
 #include "gui/gui_callbacks_run.h"
+#include "gui/gui_callbacks_save.h"
+#include "gui/gui_callbacks_test.h"
 #include "gui/gui_grid.h"
 #include "gui/gui_result.h"
 
@@ -10,8 +13,6 @@
 static AppContext *app_context_new(GtkWindow *window) {
   AppContext *ctx = g_new0(AppContext, 1);
   ctx->window = window;
-  ctx->current_idx = 0;
-  ctx->sols = NULL;
   return ctx;
 }
 
@@ -32,20 +33,25 @@ static void init_first_column(AppContext *ctx, GtkBox *parent) {
   gtk_combo_box_set_active(GTK_COMBO_BOX(ctx->level_combo), 1);
 
   // generate random sudoku button
-  GtkWidget *btn_generate = gtk_button_new_with_label("Generate Sudoku");
+  ctx->btn_gen = gtk_button_new_with_label("Generate Sudoku");
+
+  // 보고서용 테스트
+  ctx->btn_test = gtk_button_new_with_label("5×Level Test");
 
   // 배치
   gtk_box_pack_start(GTK_BOX(parent), label, FALSE, FALSE, 0);
   gtk_box_pack_start(GTK_BOX(parent), scrolled_window, TRUE, TRUE, 0);
   gtk_box_pack_start(GTK_BOX(parent), ctx->level_combo, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(parent), btn_generate, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(parent), ctx->btn_gen, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(parent), ctx->btn_test, FALSE, FALSE, 0);
 
-  // callback: on_generate_clicked, on_textview_changed
-  g_signal_connect(btn_generate, "clicked", G_CALLBACK(on_generate_clicked),
+  // callback: on_generate_clicked, on_textview_changed, on_test_clicked
+  g_signal_connect(ctx->btn_gen, "clicked", G_CALLBACK(on_generate_clicked),
                    ctx);
   GtkTextBuffer *buffer =
       gtk_text_view_get_buffer(GTK_TEXT_VIEW(ctx->input_textview));
   g_signal_connect(buffer, "changed", G_CALLBACK(on_textview_changed), ctx);
+  g_signal_connect(ctx->btn_test, "clicked", G_CALLBACK(on_test_clicked), ctx);
 }
 
 static void init_second_column(AppContext *ctx, GtkBox *parent) {
@@ -89,9 +95,19 @@ static void init_third_column(AppContext *ctx, GtkBox *parent) {
   // 내부에서 시그널 연결: on_result_selection_changed
   GtkWidget *result_scrolled = create_result_table(ctx);
 
+  // 엑셀 저장용 버튼
+  ctx->btn_save = gtk_button_new_with_label("Save");
+
   // 배치
   gtk_box_pack_start(GTK_BOX(parent), label, FALSE, FALSE, 0);
   gtk_box_pack_start(GTK_BOX(parent), result_scrolled, TRUE, TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(parent), ctx->btn_save, FALSE, FALSE, 0);
+
+  // 시그널 연결: on_save_clicked, on_treeview_right_click
+  // 내부에서 시그널 연결: on_delete_row
+  g_signal_connect(ctx->btn_save, "clicked", G_CALLBACK(on_save_clicked), ctx);
+  g_signal_connect(ctx->result_table, "button-press-event",
+                   G_CALLBACK(on_treeview_right_click), NULL);
 }
 
 void create_main_window(GtkApplication *app) {
@@ -118,11 +134,11 @@ void create_main_window(GtkApplication *app) {
   gtk_container_add(GTK_CONTAINER(window), grid);
 
   // 1, 2, 3 열
-  GtkWidget *vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 24);
+  GtkWidget *vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 12);
   init_first_column(ctx, GTK_BOX(vbox1));
   GtkWidget *vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 12);
   init_second_column(ctx, GTK_BOX(vbox2));
-  GtkWidget *vbox3 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 24);
+  GtkWidget *vbox3 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 12);
   init_third_column(ctx, GTK_BOX(vbox3));
 
   // 배치 및 조정

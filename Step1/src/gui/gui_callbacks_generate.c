@@ -13,7 +13,6 @@ void on_generate_clicked(GtkButton *button, gpointer user_data) {
   // 난이도를 가져오고 보드 랜덤 생성
   int level = gtk_combo_box_get_active(GTK_COMBO_BOX(ctx->level_combo));
   generateRandomSudoku(board, level);
-
   ctx->difficulty_level = level;
 
   // 생성된 보드를 context에 저장

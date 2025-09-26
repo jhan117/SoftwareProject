@@ -12,11 +12,13 @@ typedef struct {
   GtkWidget *cell_labels[SIZE][SIZE];
 
   // buttons
+  GtkWidget *btn_gen;
   GtkWidget *btn_prev;
   GtkWidget *btn_next;
   GtkWidget *btn_run;
+  GtkWidget *btn_test;
+  GtkWidget *btn_save;
   GtkWidget *label_page;
-
   // input and combobox
   GtkWidget *input_textview;
   GtkWidget *algo_combo;

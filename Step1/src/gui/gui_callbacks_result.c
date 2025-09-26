@@ -51,3 +51,43 @@ void on_result_selection_changed(GtkTreeSelection *selection,
   g_free(init_str);
   g_free(sol_str);
 }
+
+static void on_delete_row(GtkMenuItem *menuitem, gpointer user_data) {
+  GtkTreeView *tree_view = GTK_TREE_VIEW(user_data);
+  GtkTreeSelection *selection = gtk_tree_view_get_selection(tree_view);
+  GtkTreeModel *model = gtk_tree_view_get_model(tree_view);
+  GtkTreeIter iter;
+
+  if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
+    gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
+  }
+}
+
+gboolean on_treeview_right_click(GtkWidget *tree_view, GdkEventButton *event,
+                                 gpointer user_data) {
+  if (event->type == GDK_BUTTON_PRESS &&
+      event->button == GDK_BUTTON_SECONDARY) { // GDK_BUTTON_SECONDARY: 우클릭
+    GtkTreePath *path = NULL;
+    if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(tree_view), (gint)event->x,
+                                      (gint)event->y, &path, NULL, NULL,
+                                      NULL)) {
+      GtkTreeSelection *selection =
+          gtk_tree_view_get_selection(GTK_TREE_VIEW(tree_view));
+      gtk_tree_selection_unselect_all(selection); // 기존 선택된거 해제
+      gtk_tree_selection_select_path(selection,
+                                     path); // 현재 마우스 위치를 선택
+      gtk_tree_path_free(path);
+    }
+
+    GtkWidget *menu = gtk_menu_new();
+    GtkWidget *delete_item = gtk_menu_item_new_with_label("Delete Row");
+    g_signal_connect(delete_item, "activate", G_CALLBACK(on_delete_row),
+                     tree_view);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), delete_item);
+    gtk_widget_show_all(menu);
+    gtk_menu_popup_at_pointer(GTK_MENU(menu), (GdkEvent *)event);
+
+    return TRUE;
+  }
+  return FALSE;
+}

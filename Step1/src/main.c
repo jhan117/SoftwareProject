@@ -5,6 +5,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
 }
 
 int main(int argc, char **argv) {
+  srand(time(NULL)); // 최상단에서 한번만 호출
+
   GtkApplication *app =
       gtk_application_new("com.kaye.sudoku", G_APPLICATION_DEFAULT_FLAGS);
   g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
