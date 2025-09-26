@@ -15,10 +15,10 @@ void on_result_selection_changed(GtkTreeSelection *selection,
   GtkTreeModel *model;
   if (!gtk_tree_selection_get_selected(selection, &model, &iter))
     return;
-  gchar *init_str = NULL, *sol_str = NULL, *diff_str = NULL;
+  gchar *init_str = NULL, *sol_str = NULL, *diff_str = NULL, *algo_str = NULL;
   gint num_sols = 0;
-  gtk_tree_model_get(model, &iter, 2, &diff_str, 3, &num_sols, 6, &init_str, 7,
-                     &sol_str, -1);
+  gtk_tree_model_get(model, &iter, 1, &algo_str, 2, &diff_str, 3, &num_sols, 6,
+                     &init_str, 7, &sol_str, -1);
 
   // 행 데이터 기반으로 보드판 만들기
   board_from_string(init_str, ctx->cur_board);
@@ -46,6 +46,19 @@ void on_result_selection_changed(GtkTreeSelection *selection,
   gchar buf[16];
   g_snprintf(buf, sizeof(buf), "1 / %d", ctx->sols->count);
   gtk_label_set_text(GTK_LABEL(ctx->label_page), buf);
+
+  // 콤보박스 처리
+  int algo_num;
+  if (strcmp(algo_str, "DFS") == 0) {
+    algo_num = 0;
+  } else if (strcmp(algo_str, "HDFS") == 0) {
+    algo_num = 1;
+  } else if (strcmp(algo_str, "DLX") == 0) {
+    algo_num = 2;
+  }
+  gtk_combo_box_set_active(GTK_COMBO_BOX(ctx->level_combo),
+                           ctx->difficulty_level);
+  gtk_combo_box_set_active(GTK_COMBO_BOX(ctx->algo_combo), algo_num);
 
   // 메모리 해제
   g_free(init_str);
